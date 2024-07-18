@@ -49,11 +49,37 @@ struct ContentView: View {
                         }
                     }
                 }
+                Section("Cars") {
+                    ForEach(cars) { car in
+                        NavigationLink(value: car) {
+                            Text(car.description)
+                        }
+                    }
+                }
             }
         
             .navigationDestination(for: CarBrand.self) { brand in
-                Text("New \(brand.name)")
+                viewForBrand(brand)
             }
+            .navigationDestination(for: Car.self) { car in
+                Color(.systemRed)
+            }
+        }
+    }
+    func viewForBrand(_ brand: CarBrand) -> AnyView {
+        switch brand.name {
+        case "Ferrari":
+            return AnyView(Color(.systemRed))
+        case "Lamborghini":
+            return AnyView(Color(.systemYellow))
+        case "BMW":
+            return AnyView(Color(.systemBlue))
+        case "Mercedes":
+            return AnyView(Color(.systemGray3))
+        case "Aston Martin":
+            return AnyView(Color(.systemGreen))
+        default:
+            return AnyView(Color(.systemCyan))
         }
     }
 }
