@@ -39,30 +39,47 @@ struct ContentView: View {
         .init(make: "Mercedes", model: "AMG 63", year: 2019),
         .init(make: "Aston Martin", model: "Vantage", year: 2021)
     ]
+    
+    @State private var navigationPath = [CarBrand]()
+    @State private var showFullStack = false
+    
     var body: some View {
-        NavigationStack {
-            List {
-                Section("Makes") {
-                    ForEach(brands) { brand in
-                        NavigationLink(value: brand) {
-                            Text(brand.name)
+        NavigationStack(path: $navigationPath) {
+            VStack {
+                List {
+                    Section("Makes") {
+                        ForEach(brands) { brand in
+                            NavigationLink(value: brand) {
+                                Text(brand.name)
+                            }
+                        }
+                    }
+                    Section("Cars") {
+                        ForEach(cars) { car in
+                            NavigationLink(value: car) {
+                                Text(car.description)
+                            }
                         }
                     }
                 }
-                Section("Cars") {
-                    ForEach(cars) { car in
-                        NavigationLink(value: car) {
-                            Text(car.description)
-                        }
-                    }
+                
+                .navigationDestination(for: CarBrand.self) { brand in
+                    viewForBrand(brand)
                 }
-            }
-        
-            .navigationDestination(for: CarBrand.self) { brand in
-                viewForBrand(brand)
-            }
-            .navigationDestination(for: Car.self) { car in
-                Color(.systemRed)
+                .navigationDestination(for: Car.self) { car in
+                    Color(.systemRed)
+                }
+                Button(action: {
+                    showFullStack.toggle()
+                    
+                    if showFullStack {
+                        navigationPath = brands
+                    } else {
+                        navigationPath = [brands[0], brands[2], brands[1]]
+                    }
+                }, label: {
+                    Text("View all")
+                })
             }
         }
     }
