@@ -64,7 +64,15 @@ struct ContentView: View {
                 }
                 
                 .navigationDestination(for: CarBrand.self) { brand in
-                    viewForBrand(brand)
+                    VStack {
+                        viewForBrand(brand)
+                        
+                        Button(action: {
+                            navigationPath = []
+                        }, label: {
+                            Text("Go to root")
+                        })
+                    }
                 }
                 .navigationDestination(for: Car.self) { car in
                     Color(.systemRed)
